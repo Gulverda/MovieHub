@@ -173,6 +173,9 @@ const API_URL =
 const SEARCH_API =
   "https://api.themoviedb.org/3/search/movie?api_key=3fd2be6f0c70a2a598f084ddfb75487c&query=";
 
+const TRENDING_API =
+  "https://api.themoviedb.org/3/trending/all/day?api_key=04c35731a5ee918f014970082a0088b1";
+
 const App = () => {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -200,6 +203,20 @@ const App = () => {
     fetchMovies();
   }, []);
 
+  useEffect(() => {
+    const fetchTrendingMovies = async () => {
+      try {
+        const response = await fetch(TRENDING_API);
+        const data = await response.json();
+        setTrending(data.results);
+      } catch (error) {
+        console.error('Error fetching trending movies:', error);
+      }
+    };
+
+    fetchTrendingMovies();
+  }, []);
+
   const handleSearch = async () => {
     try {
       const response = await fetch(`${SEARCH_API}${searchTerm}`);
@@ -218,13 +235,13 @@ const App = () => {
     setWatchlist((prevWatchlist) => [...prevWatchlist, movie]);
   };
 
-  const handleLogin = () => {
-    if (userData.username === 'yourUsername' && userData.password === 'yourPassword') {
-      setIsLoggedIn(true);
-    } else {
-      alert('Invalid credentials. Please try again.');
-    }
-  };
+  // const handleLogin = () => {
+  //   if (userData.username === 'yourUsername' && userData.password === 'yourPassword') {
+  //     setIsLoggedIn(true);
+  //   } else {
+  //     alert('Invalid credentials. Please try again.');
+  //   }
+  // };
 
   const handleSignup = () => {
     if (userData.username && userData.password) {
@@ -305,7 +322,6 @@ const App = () => {
               </div>
             ))}
           </WatchlistContainer>
-
           <TrendingContainer>
             <h2>Trending</h2>
             {trending.map((trendingItem) => (
