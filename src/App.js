@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-// Styled Components
 const GlobalStyle = styled.div`
   font-family: 'Arial', sans-serif;
 `;
@@ -148,6 +147,22 @@ const WatchlistContainer = styled.div`
 
 const TrendingContainer = styled.div`
   margin-top: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  .trending-list {
+    display: inline-block;
+    animation: scrollAnimation 20s linear infinite;
+  }
+
+  @keyframes scrollAnimation {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 
   .trending-card {
     width: 200px;
@@ -155,6 +170,8 @@ const TrendingContainer = styled.div`
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    display: inline-block;
+    vertical-align: top;
 
     img {
       width: 100%;
@@ -188,6 +205,7 @@ const App = () => {
     username: '',
     password: '',
   });
+  const [currentPage, setCurrentPage] = useState('movies');
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -235,14 +253,6 @@ const App = () => {
     setWatchlist((prevWatchlist) => [...prevWatchlist, movie]);
   };
 
-  // const handleLogin = () => {
-  //   if (userData.username === 'yourUsername' && userData.password === 'yourPassword') {
-  //     setIsLoggedIn(true);
-  //   } else {
-  //     alert('Invalid credentials. Please try again.');
-  //   }
-  // };
-
   const handleSignup = () => {
     if (userData.username && userData.password) {
       setIsRegistered(true);
@@ -253,6 +263,80 @@ const App = () => {
 
   const handleStartWithoutRegistration = () => {
     setIsLoggedIn(true);
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'movies':
+        return (
+          <MovieList>
+            {movies.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                <h2>{movie.title}</h2>
+                <p>{movie.overview}</p>
+                <button onClick={() => handleAddToFavorites(movie)}>Add to Favorites</button>
+                <button onClick={() => handleAddToWatchlist(movie)}>Add to Watchlist</button>
+              </div>
+            ))}
+          </MovieList>
+        );
+
+      case 'favorites':
+        return (
+          <FavoritesContainer>
+            <h2>Favorites</h2>
+            {favorites.map((favorite) => (
+              <div key={favorite.id} className="favorite-card">
+                <img src={`https://image.tmdb.org/t/p/w500/${favorite.poster_path}`} alt={favorite.title} />
+                <h3>{favorite.title}</h3>
+              </div>
+            ))}
+          </FavoritesContainer>
+        );
+
+      case 'watchlist':
+        return (
+          <WatchlistContainer>
+            <h2>Watchlist</h2>
+            {watchlist.map((watchlistItem) => (
+              <div key={watchlistItem.id} className="watchlist-card">
+                <img src={`https://image.tmdb.org/t/p/w500/${watchlistItem.poster_path}`} alt={watchlistItem.title} />
+                <h3>{watchlistItem.title}</h3>
+              </div>
+            ))}
+          </WatchlistContainer>
+        );
+
+      case 'trending':
+        return (
+          <TrendingContainer>
+            <div className="trending-list">
+              {trending.map((trendingItem) => (
+                <div key={trendingItem.id} className="trending-card">
+                  <img src={`https://image.tmdb.org/t/p/w500/${trendingItem.poster_path}`} alt={trendingItem.title} />
+                  <h3>{trendingItem.title}</h3>
+                </div>
+              ))}
+            </div>
+          </TrendingContainer>
+        );
+
+      default:
+        return (
+          <MovieList>
+            {movies.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                <h2>{movie.title}</h2>
+                <p>{movie.overview}</p>
+                <button onClick={() => handleAddToFavorites(movie)}>Add to Favorites</button>
+                <button onClick={() => handleAddToWatchlist(movie)}>Add to Watchlist</button>
+              </div>
+            ))}
+          </MovieList>
+        );
+    }
   };
 
   return (
@@ -291,46 +375,14 @@ const App = () => {
             <button onClick={handleSearch}>Search</button>
           </SearchContainer>
 
-          <MovieList>
-            {movies.map((movie) => (
-              <div key={movie.id} className="movie-card">
-                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
-                <h2>{movie.title}</h2>
-                <p>{movie.overview}</p>
-                <button onClick={() => handleAddToFavorites(movie)}>Add to Favorites</button>
-                <button onClick={() => handleAddToWatchlist(movie)}>Add to Watchlist</button>
-              </div>
-            ))}
-          </MovieList>
+          {renderPage()}
 
-          <FavoritesContainer>
-            <h2>Favorites</h2>
-            {favorites.map((favorite) => (
-              <div key={favorite.id} className="favorite-card">
-                <img src={`https://image.tmdb.org/t/p/w500/${favorite.poster_path}`} alt={favorite.title} />
-                <h3>{favorite.title}</h3>
-              </div>
-            ))}
-          </FavoritesContainer>
-
-          <WatchlistContainer>
-            <h2>Watchlist</h2>
-            {watchlist.map((watchlistItem) => (
-              <div key={watchlistItem.id} className="watchlist-card">
-                <img src={`https://image.tmdb.org/t/p/w500/${watchlistItem.poster_path}`} alt={watchlistItem.title} />
-                <h3>{watchlistItem.title}</h3>
-              </div>
-            ))}
-          </WatchlistContainer>
-          <TrendingContainer>
-            <h2>Trending</h2>
-            {trending.map((trendingItem) => (
-              <div key={trendingItem.id} className="trending-card">
-                <img src={`https://image.tmdb.org/t/p/w500/${trendingItem.poster_path}`} alt={trendingItem.title} />
-                <h3>{trendingItem.title}</h3>
-              </div>
-            ))}
-          </TrendingContainer>
+          <div>
+            <button onClick={() => setCurrentPage('movies')}>Movies</button>
+            <button onClick={() => setCurrentPage('favorites')}>Favorites</button>
+            <button onClick={() => setCurrentPage('watchlist')}>Watchlist</button>
+            <button onClick={() => setCurrentPage('trending')}>Trending</button>
+          </div>
         </AppContainer>
       )}
     </GlobalStyle>
