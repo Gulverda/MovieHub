@@ -1,4 +1,3 @@
-// WatchlistContainer.js
 import React from "react";
 import styled from "styled-components";
 
@@ -6,20 +5,25 @@ const StyledWatchlistContainer = styled.div`
   margin-top: 20px;
 
   .watchlist-card {
-    width: 200px;
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-    img {
-      width: 100%;
+    .watchlist-card {
+      width: 280px; /* Adjusted width */
+      height: 237px; /* Adjusted height */
+      margin: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
       border-radius: 5px;
-    }
 
-    h3 {
-      margin-top: 10px;
-      font-size: 1.2em;
+      img {
+        width: 100%;
+        height: 174px; /* Adjusted height */
+        border-radius: 8px;
+        object-fit: cover; /* Preserve aspect ratio */
+      }
+
+      h3 {
+        margin-top: 10px;
+        font-size: 1.2em;
+      }
     }
   }
 `;
@@ -27,19 +31,17 @@ const StyledWatchlistContainer = styled.div`
 const WatchlistContainer = ({ watchlist }) => {
   return (
     <StyledWatchlistContainer>
-    <div>
-      <h2>Watchlist</h2>
-      <ul>
-        {watchlist.map((movie) => (
-          <li key={movie.id}>{movie.title}
-          <img
-                src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
-                alt={movie.title}
-              />
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div>
+        <h2>Watchlist</h2>
+        <ul>
+          {watchlist.map((item) => (
+            <li key={item.title} className="watchlist-card">
+              <h3>{item.title}</h3>
+              <img src={item.thumbnail.regular.small} alt={item.title} />
+            </li>
+          ))}
+        </ul>
+      </div>
     </StyledWatchlistContainer>
   );
 };

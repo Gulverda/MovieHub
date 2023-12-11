@@ -1,65 +1,82 @@
 // MovieList.js
+
 import React from "react";
 import styled from "styled-components";
+import fav from "../assets/fav.svg"
 
-const StyledMovieList = styled.div`
+const MovieListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
+`;
 
-  .movie-card {
-    width: 300px;
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+const MovieCard = styled.div`
+  position: relative;
+  margin: 10px;
+  text-align: center;
+  
+  button{
+    position: absolute;
+    margin-left: -45px;
+    margin-top: 16px;
+    background: transparent;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.56;
+  }
 
-    img {
-      width: 100%;
-      border-radius: 5px;
-    }
-
-    h2 {
-      margin-top: 10px;
-      font-size: 1.2em;
-    }
-
-    p {
-      margin-top: 10px;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 8px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+  button:hover{
+    opacity: 1;
+    background: white;
   }
 `;
 
+const MovieImage = styled.img`
+  width: 280px;  // Adjust the size as needed
+  height: 174px;  // Adjust the size as needed
+  border-radius: 8px;
+`;
+
+const PlaceholderImage = styled.div`
+  width: 150px;  // Adjust the size as needed
+  height: 225px;  // Adjust the size as needed
+  background-color: #ccc;
+`;
+
+
 const MovieList = ({ movies, handleAddToFavorites, handleAddToWatchlist }) => {
   return (
-    <StyledMovieList>
-      {movies.map((movie) => (
-        <div key={movie.id} className="movie-card">
-          <img
-            src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
-            alt={movie.title}
-          />
-          <h2>{movie.title}</h2>
-          <p>{movie.overview}</p>
-          <button onClick={() => handleAddToFavorites(movie)}>
-            Add to Favorites
-          </button>
-          <button onClick={() => handleAddToWatchlist(movie)}>
-            Add to Watchlist
-          </button>
-        </div>
-      ))}
-    </StyledMovieList>
+    <MovieListContainer>
+      {movies.map((movie, index) => {
+        console.log("Movie data:", movie); // Log movie data
+        return (
+          <MovieCard key={index}>
+            {movie.thumbnail ? (
+              <MovieImage
+                src={movie.thumbnail.trending ? movie.thumbnail.trending.small : movie.thumbnail.regular.small}
+                alt={movie.title}
+              />
+            ) : (
+              <PlaceholderImage />
+              
+            )}<button onClick={() => handleAddToFavorites(movie)}>
+            <img src={fav} alt="Favorite Icon" />
+            </button>
+            
+            <h3>{movie.title}</h3>
+            <p>{movie.year}</p>
+            <p>{movie.category}</p>
+            <p>{movie.rating}</p>
+            <button onClick={() => handleAddToWatchlist(movie)}>
+              Add to Watchlist
+            </button>
+          </MovieCard>
+        );
+      })}
+    </MovieListContainer>
   );
 };
 

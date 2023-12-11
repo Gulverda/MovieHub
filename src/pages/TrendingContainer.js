@@ -27,7 +27,7 @@ const StyledTrendingContainer = styled.div`
   }
 
   .trending-card {
-    width: 200px;
+    width: 470px;
     margin-right: 20px;
     border-radius: 8px;
     overflow: hidden;
@@ -35,7 +35,7 @@ const StyledTrendingContainer = styled.div`
 
     img {
       width: 100%;
-      height: 300px;
+      height: 230px;
       object-fit: cover;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
@@ -62,14 +62,11 @@ const TrendingContainer = ({ trending }) => {
       <div className="trending-container">
         <h2>Trending</h2>
         <div className="trending-list">
-          {trending.map((movie) => (
-            <div key={movie.id} className="trending-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
-                alt={movie.title}
-              />
+          {trending.map((item) => (
+            <div key={item.title} className="trending-card">
+              <img src={item.thumbnail.regular.small} alt={item.title} />
               <div className="trending-details">
-                <h3>{movie.title}</h3>
+                <h3>{item.title}</h3>
               </div>
             </div>
           ))}

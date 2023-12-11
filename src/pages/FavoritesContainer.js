@@ -1,4 +1,3 @@
-// FavoritesContainer.js
 import React from "react";
 import styled from "styled-components";
 
@@ -29,12 +28,10 @@ const FavoritesContainer = ({ favorites }) => {
     <StyledFavoritesContainer>
       <h2>Favorites</h2>
       <ul>
-        {favorites.map((movie) => (
-          <li key={movie.id}>{movie.title}
-          <img
-                src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
-                alt={movie.title}
-              />
+        {favorites.map((item) => (
+          <li key={item.title} className="favorite-card">
+            <h3>{item.title}</h3>
+            <img src={item.thumbnail.regular.small} alt={item.title} />
           </li>
         ))}
       </ul>
