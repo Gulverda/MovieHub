@@ -70,9 +70,6 @@ const MovieList = ({ movies, handleAddToFavorites, handleAddToWatchlist }) => {
             <p>{movie.year}</p>
             <p>{movie.category}</p>
             <p>{movie.rating}</p>
-            <button onClick={() => handleAddToWatchlist(movie)}>
-              Add to Watchlist
-            </button>
           </MovieCard>
         );
       })}

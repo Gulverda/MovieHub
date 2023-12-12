@@ -1,14 +1,15 @@
+// App.js
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';  // Updated import
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import styled from "styled-components";
 import "./App.css";
+import Sidebar from "./Sidebar.js";
 import logo from "./assets/Movie.png";
 import MovieList from "./pages/MovieList";
-import fav from "./assets/fav.svg";
 import FavoritesContainer from "./pages/FavoritesContainer";
-import WatchlistContainer from "./pages/WatchlistContainer";
+// import WatchlistContainer from "./pages/WatchlistContainer";
 import TrendingContainer from "./pages/TrendingContainer";
-import data from "./Data.json"
+import data from "./Data.json";
 
 const GlobalStyle = styled.div`
   text-align: center;
@@ -113,7 +114,6 @@ const App = () => {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [watchlist, setWatchlist] = useState([]);
   const [trending, setTrending] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -124,9 +124,6 @@ const App = () => {
 
   useEffect(() => {
     setMovies(data.results);
-  }, []);
-
-  useEffect(() => {
     setTrending(data.results.filter(movie => movie.isTrending));
   }, []);
 
@@ -136,10 +133,6 @@ const App = () => {
 
   const handleAddToFavorites = (movie) => {
     setFavorites((prevFavorites) => [...prevFavorites, movie]);
-  };
-
-  const handleAddToWatchlist = (movie) => {
-    setWatchlist((prevWatchlist) => [...prevWatchlist, movie]);
   };
 
   const handleSignup = () => {
@@ -157,104 +150,92 @@ const App = () => {
   return (
     <Router>
       <GlobalStyle>
+        <Sidebar />
         <img src={logo} alt="MovieHub Logo" />
         {!isLoggedIn && !isRegistered && (
-         <SignupContainer>
-         <h1>Login</h1>
-         <input
-           placeholder="Email Address"
-           type="text"
-           value={userData.username}
-           onChange={(e) =>
-             setUserData({ ...userData, username: e.target.value })
-           }
-         />
-         <input
-           placeholder="Password"
-           type="password"
-           value={userData.password}
-           onChange={(e) =>
-             setUserData({ ...userData, password: e.target.value })
-           }
-         />
-         <button onClick={handleSignup}>Login to your account</button>
-         <p>Or</p>
-         <button onClick={handleStartWithoutRegistration}>
-           Start Without Registration
-         </button>
-       </SignupContainer>
+          <SignupContainer>
+            <h1>Login</h1>
+            <input
+              placeholder="Email Address"
+              type="text"
+              value={userData.username}
+              onChange={(e) =>
+                setUserData({ ...userData, username: e.target.value })
+              }
+            />
+            <input
+              placeholder="Password"
+              type="password"
+              value={userData.password}
+              onChange={(e) =>
+                setUserData({ ...userData, password: e.target.value })
+              }
+            />
+            <button onClick={handleSignup}>Login to your account</button>
+            <p>Or</p>
+            <button onClick={handleStartWithoutRegistration}>
+              Start Without Registration
+            </button>
+          </SignupContainer>
         )}
 
         {(isLoggedIn || isRegistered) && (
-         <AppContainer>
-         <h1>MovieHub</h1>
-         <SearchContainer>
-           <input
-             type="text"
-             placeholder="Search for movies..."
-             value={searchTerm}
-             onChange={(e) => setSearchTerm(e.target.value)}
-           />
-           <button onClick={handleSearch}>Search</button>
-         </SearchContainer>
+          <AppContainer>
+            <h1>MovieHub</h1>
+            <SearchContainer>
+              <input
+                type="text"
+                placeholder="Search for movies..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button onClick={handleSearch}>Search</button>
+            </SearchContainer>
 
-         <div>
-           <Link to="/movies">
-             <button>Movies</button>
-           </Link>
-           <Link to="/favorites">
-             <button><img src={fav} alt="Favorite Icon" /></button>
-           </Link>
-           <Link to="/watchlist">
-             <button>Watchlist</button>
-           </Link>
-           <Link to="/trending">
-             <button>Trending</button>
-           </Link>
-         </div>
+            <div>
+              <Link to="/">
+                <button>Home</button>
+              </Link>
+              <Link to="/movies">
+                <button>Movies</button>
+              </Link>
+              <Link to="/favorites">
+                <button>Favorites</button>
+              </Link>
+            </div>
 
-         <Routes>
-           <Route
-             path="/movies"
-             element={
-               <div>
-                 <MovieList
-                   movies={movies}
-                   handleAddToFavorites={handleAddToFavorites}
-                   handleAddToWatchlist={handleAddToWatchlist}
-                 />
-                 <Link to="/favorites">
-                   <button><img src={fav} alt="Favorite Icon" /></button>
-                 </Link>
-                 <Link to="/watchlist">
-                   <button>Go to Watchlist</button>
-                 </Link>
-                 <Link to="/trending">
-                   <button>Go to Trending</button>
-                 </Link>
-               </div>
-             }
-           />
-           <Route
-             path="/favorites"
-             element={
-               <FavoritesContainer favorites={favorites} />
-             }
-           />
-           <Route
-             path="/watchlist"
-             element={
-               <WatchlistContainer watchlist={watchlist} />
-             }
-           />
-           <Route
-             path="/trending"
-             element={
-               <TrendingContainer trending={trending} />
-             }
-           />
-         </Routes>
-       </AppContainer>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div>
+                    <TrendingContainer trending={trending} />
+                    <MovieList
+                      movies={movies}
+                      handleAddToFavorites={handleAddToFavorites}
+                    />
+                  </div>
+                }
+              />
+              <Route
+                path="/movies"
+                element={
+                  <div>
+                    <MovieList
+                      movies={movies}
+                      handleAddToFavorites={handleAddToFavorites}
+                    />
+                  </div>
+                }
+              />
+              <Route
+                path="/favorites"
+                element={
+                  <FavoritesContainer favorites={favorites} />
+                }
+              />
+            </Routes>
+          </AppContainer>
         )}
       </GlobalStyle>
     </Router>
